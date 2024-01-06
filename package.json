@@ -1,0 +1,23 @@
+{
+  "name": "quick-yaml.db",
+  "version": "1.0.0",
+  "description": "An easy, open-source, Node.js database based on YAML files.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "tsc && node .",
+    "compile": "tsc"
+  },
+  "keywords": [],
+  "author": "TFAGaming",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "repository": {
+    "url": "https://github.com/TFAGaming/quick-yaml.db.git"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.10.6"
+  }
+}
