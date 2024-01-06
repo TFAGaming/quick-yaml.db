@@ -1,10 +1,8 @@
-import { YAMLStructure, YAMLTypes } from '../types';
-export declare class QuickYAML<T extends YAMLTypes> {
-    private readonly path;
-    readonly cache: Map<string, T>;
+import { QuickYAMLModel, YAMLStructure } from '../types';
+export declare class QuickYAML<Model extends QuickYAMLModel[] = []> {
+    readonly path: string;
     /**
      * The main constructor to create a non-async database, based on YAML/YML file.
-     * @param {QuickYAMLOptions} options The options for the constructor.
      */
     constructor(path: `${string}.yml` | `${string}.yaml`);
     /**
@@ -24,67 +22,60 @@ export declare class QuickYAML<T extends YAMLTypes> {
     private _load;
     /**
      * Returns the number of keys that exist in the database.
-     * @returns {number}
      */
     get size(): number;
     /**
      * Returns the YAML data in JSON format.
-     * @returns {YAMLStructure<T>}
      */
-    toJSON(): YAMLStructure<T>;
+    toJSON<T extends Model[number]['type']>(): YAMLStructure<T>;
     /**
      * Adds a new variable to the database with a value. If the variable already exist, it will update the variable's value.
      * @param variable The variable name.
      * @param value The variable's value.
-     * @returns {this}
      */
-    set(variable: string, value: T): this;
+    set<K extends Model[number]['variable'], T extends Extract<Model[number], {
+        variable: K;
+    }>['type']>(variable: K, value: T): this;
     /**
      * Deletes a variable from the database.
      * @param variable The variable name.
-     * @returns {this}
      */
-    delete(variable: string): this;
+    delete<K extends Model[number]['variable']>(variable: K): this;
     /**
      * Gets a variable's value from the database, returns `undefined` if it doesn't exist.
      * @param variable The variable's name.
-     * @returns {T | undefined}
      */
-    get(variable: string): T | undefined;
+    get<K extends Model[number]['variable']>(variable: K): Extract<Model[number], {
+        variable: K;
+    }>['type'] | undefined;
     /**
      * Checks if a variable exist in the database or not.
      * @param variable The variable name.
-     * @returns {boolean}
      */
-    has(variable: string): boolean;
+    has<K extends Model[number]['variable']>(variable: K): boolean;
     /**
      * Deletes every variable in the YAML data.
-     * @returns {this}
      */
     clear(): this;
     /**
      * Returns an array of key/values of the enumerable properties of the YAML data.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
-     * @returns {[string, T][]}
      */
-    entries(): [string, T][];
+    entries(): [string, Model[number]['type']][];
     /**
      * Returns the names of the enumerable string properties and methods of the YAML data.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-     * @returns {string[]}
      */
     keys(): string[];
     /**
      * Returns an array of values of the enumerable properties of the YAML data.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
-     * @returns {T[]}
      */
-    values(): T[];
+    values(): Model[number]['type'][];
     /**
      * Executes a provided function once per each key/value pair in the YAML data, in insertion order.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach
      * @param func The callback function.
-     * @returns {this}
      */
-    forEach(func: (value: T, key: string, index: number) => void, thisArg?: unknown): this;
+    forEach(func: (value: Model[number]['type'], key: Model[number]['variable'], index: number) => void, thisArg?: unknown): this;
 }

@@ -13,32 +13,94 @@ npm install quick-yaml.db js-yaml
 ## Example Usage
 In this example, create a YAML file and set the file's path into the constructor's parameter. The file extensions allowed to use: `.yaml`, `.yml`.
 
-To start with, create a new database using the class **QuickYAML**:
+### Define a new database:
+Create a new database using the class **QuickYAML** with a model. Using the class without a model will always return `never` to the variable and the type when using any of the methods that are related to the class.
+
 ```ts
 import { QuickYAML } from 'quick-yaml.db';
 
-const db = new QuickYAML('example.yaml');
+type Model = [
+    { variable: 'name', type: string },
+    { variable: 'age', type: number },
+    { variable: 'alive', type: boolean }
+];
+
+const db = new QuickYAML('./example.yaml');
 ```
 
-You can use any of the methods below to write and parse the YAML file data:
+### The method: `set`
+Adds a new variable to the database with a value. If the variable already exist, it will update the variable's value.
+
 ```ts
-// Setting a variable in the database:
-db.set('user', { name: 'John', age: 24 });
+const obj = {
+    name: 'John',
+    age: 24,
+    alive: true
+};
 
-// Checking whenever the variable exist or not:
-db.has('user');
-// → true
+db.set('user', obj);
+```
 
-// Getting the variable's value:
-db.get('user');
-// → { name: 'John', age: 24 }
+### The method: `delete`
 
-// Deleting the variable:
+Deletes a variable from the database.
+
+```ts
 db.delete('user');
+```
 
-// Clearing the database:
+### The method: `has`
+
+Checks if a variable exist in the database or not.
+
+```ts
+db.has('name');
+db.has('age');
+db.has('hobbies');
+```
+
+The return for each of the tests above:
+
+```ts
+true
+true
+false
+```
+
+### The method: `get`
+
+Gets a variable's value from the database, returns `undefined` if it doesn't exist.
+
+```ts
+db.get('name');
+db.get('age');
+db.get('hobbies');
+```
+
+The return for each of the tests above:
+
+```ts
+'John'
+24
+undefined
+```
+
+### The method: `clear`
+
+Deletes every variable in the YAML data.
+
+```ts
 db.clear();
 ```
 
+### Other methods:
+
+```ts
+db.entries();
+db.keys();
+db.values();
+db.forEach((value, key, index) => ...);
+```
+
 ## License
-[GNU General Public License 3](#license)
+[GNU General Public License v3](#license)
