@@ -4,14 +4,14 @@ Quick-YAML.db is an open-source Node.js library that allows you to store data in
 GitHub repository: https://github.com/TFAGaming/quick-yaml.db
 
 ## Installation
-You must install [js-yaml](https://www.npmjs.com/package/js-yaml) to parse and write YAML data.
+Use the command below to install the package ([js-yaml](https://www.npmjs.com/package/js-yaml) is also required to install):
 
 ```
 npm install quick-yaml.db js-yaml
 ```
 
 ## Example Usage
-In this example, create a YAML file and set the file's path into the constructor's parameter. The file extensions allowed to use: `.yaml`, `.yml`.
+In this example, create a YAML file and set the file's path into the constructor's parameter. The file extensions allowed to use: `.yaml`, `.yml`. The code below is based on TypeScript, using **CommonJS** module.
 
 ### Define a new database:
 Create a new database using the class **QuickYAML** with a model. Using the class without a model will always return `never` to the variable and the type when using any of the methods that are related to the class.
@@ -22,10 +22,11 @@ import { QuickYAML } from 'quick-yaml.db';
 type Model = [
     { variable: 'name', type: string },
     { variable: 'age', type: number },
-    { variable: 'alive', type: boolean }
+    { variable: 'alive', type: boolean },
+    { variable: 'languages', type: string[] }
 ];
 
-const db = new QuickYAML('./example.yaml');
+const db = new QuickYAML<Model>('./example.yaml');
 ```
 
 ### The method: `set`
@@ -35,18 +36,26 @@ Adds a new variable to the database with a value. If the variable already exist,
 const obj = {
     name: 'John',
     age: 24,
-    alive: true
+    alive: true,
+    languages: ['English', 'French']
 };
 
-db.set('user', obj);
+type Keys = keyof typeof obj;
+
+for (const key in obj) {
+    db.set(key as Keys, obj[key as Keys]);
+};
 ```
 
-### The method: `delete`
+The YAML file content when the method is used:
 
-Deletes a variable from the database.
-
-```ts
-db.delete('user');
+```yaml
+name: John
+age: 24
+alive: true
+languages:
+  - English
+  - French
 ```
 
 ### The method: `has`
@@ -85,6 +94,32 @@ The return for each of the tests above:
 undefined
 ```
 
+### The method: `find`
+
+Gets a variable's object data from the database.
+
+```ts
+db.find('name');
+db.find('languages');
+db.find('hobbies');
+```
+
+The return for each of the tests above:
+
+```ts
+{ variable: 'name', value: 'John' }
+{ variable: 'languages', value: ['English', 'French'] }
+{ variable: 'hobbies', value: undefined }
+```
+
+### The method: `delete`
+
+Deletes a variable from the database.
+
+```ts
+db.delete('name');
+```
+
 ### The method: `clear`
 
 Deletes every variable in the YAML data.
@@ -95,11 +130,35 @@ db.clear();
 
 ### Other methods:
 
+Object related functions:
 ```ts
 db.entries();
+
 db.keys();
 db.values();
+```
+
+Array related functions:
+
+```ts
+db.first();
+db.last();
+
+db.indexOf(variable);
+
+db.push(variable, ...values);
+db.pull(variable, ...values);
+
+db.map((value, key, index) => ...);
 db.forEach((value, key, index) => ...);
+```
+
+Other useful functions:
+```ts
+db.ensure(variable, default_value);
+
+db.pick(...variables);
+db.purge(...variables);
 ```
 
 ## License
