@@ -3,6 +3,10 @@ Quick-YAML.db is an open-source Node.js library that allows you to store data in
 
 GitHub repository: https://github.com/TFAGaming/quick-yaml.db
 
+## Changes
+- New constructor parameter: `options` (**QuickYAMLOptions**)
+- Set default values from each model if a model's variable doesn't exist in the database.
+
 ## Installation
 Use the command below to install the package ([js-yaml](https://www.npmjs.com/package/js-yaml) is also required to install):
 

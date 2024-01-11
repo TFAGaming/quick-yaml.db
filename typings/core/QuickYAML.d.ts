@@ -1,13 +1,16 @@
-import { QuickYAMLModel, YAMLStructure, YAMLTypes } from '../types';
+import { QuickYAMLModel, QuickYAMLOptions, YAMLStructure, YAMLTypes } from '../types';
 export declare class QuickYAML<Model extends QuickYAMLModel[] = {
     variable: string;
     type: YAMLTypes;
 }[]> {
     readonly path: string;
+    private readonly options?;
     /**
      * The main constructor to create a non-async database, based on YAML/YML file.
+     * @param path The YAML file path.
+     * @param options The constructor options.
      */
-    constructor(path: `${string}.yml` | `${string}.yaml`);
+    constructor(path: `${string}.yml` | `${string}.yaml`, options?: QuickYAMLOptions<Model>);
     /**
      * Overwrites the file's content and parses JSON data.
      * @private

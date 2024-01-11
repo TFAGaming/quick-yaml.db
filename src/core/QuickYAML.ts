@@ -1,19 +1,31 @@
 import jsyaml from 'js-yaml';
 import fs from 'node:fs';
-import { QuickYAMLModel, YAMLStructure, YAMLTypes } from '../types';
+import { QuickYAMLModel, QuickYAMLOptions, YAMLStructure, YAMLTypes } from '../types';
 
 export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type: YAMLTypes }[]> {
     public readonly path: string;
+    private readonly options?: QuickYAMLOptions<Model>;
 
     /**
      * The main constructor to create a non-async database, based on YAML/YML file.
+     * @param path The YAML file path.
+     * @param options The constructor options.
      */
-    public constructor(path: `${string}.yml` | `${string}.yaml`) {
+    public constructor(path: `${string}.yml` | `${string}.yaml`, options?: QuickYAMLOptions<Model>) {
         this.path = path;
+        this.options = options;
 
         if (!fs.existsSync(this.path)) throw new Error('The file path was not found');
 
         if (!(this.path.endsWith('.yaml') || this.path.endsWith('.yml'))) throw new Error('The file path is must end with .yaml or .yml');
+
+        if ((this.options?.model?.defaultModelValues.length || 0) > 0 && this.options?.model?.setValuesOnReady) {
+            for (const model of this.options.model.defaultModelValues) {
+                if (this.has(model.variable)) continue;
+
+                this.set(model.variable, model.value);
+            };
+        };
     };
 
     /**
