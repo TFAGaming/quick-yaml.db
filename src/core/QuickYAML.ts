@@ -86,6 +86,9 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param value The variable's value.
      */
     public set<K extends Model[number]['variable'], T extends Extract<Model[number], { variable: K }>['type']>(variable: K, value: T): this {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+        if (!value) throw new Error('Missing parameter: \'value\'');
+
         let obj = this.toJSON();
 
         obj[variable] = value;
@@ -100,6 +103,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param variable The variable name.
      */
     public delete<K extends Model[number]['variable']>(variable: K): this {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+
         let obj = this.toJSON();
 
         if (variable in obj) {
@@ -115,6 +120,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * Deletes multiple variables from the database.
      */
     public purge<K extends Model[number]['variable']>(...variables: K[]): this {
+        if (!variables) throw new Error('Missing parameter: \'variables\'');
+
         let obj = this.toJSON();
 
         for (const variable of variables) {
@@ -131,6 +138,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param variable The variable's name.
      */
     public get<K extends Model[number]['variable'], T extends Extract<Model[number], { variable: K }>['type']>(variable: K): T | undefined {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+
         const obj = this.toJSON();
 
         return variable in obj ? obj[variable] as T : undefined;
@@ -142,6 +151,9 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param defaultValue The default value, if the variable doesn't exist.
      */
     public ensure<K extends Model[number]['variable'], D extends YAMLTypes>(variable: K, defaultValue: D): Extract<Model[number], { variable: K }>['type'] | D {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+        if (!defaultValue) throw new Error('Missing parameter: \'defaultValue\'');
+
         const obj = this.toJSON();
 
         return variable in obj ? obj[variable] : defaultValue;
@@ -152,6 +164,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param variable The variable's name.
      */
     public find<K extends Model[number]['variable'], T extends Extract<Model[number], { variable: K }>['type']>(variable: K): { variable: K, value: T | undefined } {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+
         const value = this.get(variable);
 
         return {
@@ -165,7 +179,9 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param variables The variables' name.
      */
     public pick<K extends Model[number]['variable'], T extends Model[number]['type']>(...variables: K[]): { variable: K, value: T }[] {
-        const arr = [];
+        if (!variables) throw new Error('Missing parameter: \'variables\'');
+
+        const arr: { variable: K, value: T }[] = [];
 
         for (const variable of variables) {
             if (!this.has(variable)) continue;
@@ -184,6 +200,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param variable The variable name.
      */
     public has<K extends Model[number]['variable']>(variable: K): boolean {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+
         const obj = this.toJSON();
 
         return variable in obj;
@@ -234,6 +252,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param func The callback function.
      */
     public forEach(func: (value: Model[number]['type'], key: Model[number]['variable'], index: number) => void, thisArg?: unknown): this {
+        if (!func) throw new Error('Missing parameter: \'func\'');
+
         if (thisArg !== undefined) func = func.bind(thisArg);
 
         const obj = this.toJSON();
@@ -273,6 +293,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param variable The variable's name.
      */
     public indexOf<K extends Model[number]['variable']>(variable: K): number {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+
         return this.keys().indexOf(variable);
     };
 
@@ -282,6 +304,8 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param func The callback function.
      */
     public map<R>(func: (value: Model[number]['type'], key: Model[number]['variable'], index: number) => R, thisArg?: unknown): R[] {
+        if (!func) throw new Error('Missing parameter: \'func\'');
+
         if (thisArg !== undefined) func = func.bind(thisArg);
 
         let currentIndex = 0;
@@ -302,6 +326,9 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @param values The new values to append.
      */
     public push<K extends Model[number]['variable'], T extends Extract<Model[number], { variable: K }>['type']>(variable: K, ...values: (T extends YAMLTypes[] ? T : never)): number {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+        if (!values) throw new Error('Missing parameter: \'values\'');
+
         const data = this.toJSON();
 
         if (!this.has(variable)) return -1;
@@ -321,6 +348,9 @@ export class QuickYAML<Model extends QuickYAMLModel[] = { variable: string, type
      * @returns 
      */
     public pull<K extends Model[number]['variable'], T extends Extract<Model[number], { variable: K }>['type']>(variable: K, ...values: (T extends YAMLTypes[] ? T : never)): number {
+        if (!variable) throw new Error('Missing parameter: \'variable\'');
+        if (!values) throw new Error('Missing parameter: \'values\'');
+
         const data = this.toJSON();
 
         if (!this.has(variable)) return -1;

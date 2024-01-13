@@ -6,6 +6,7 @@ GitHub repository: https://github.com/TFAGaming/quick-yaml.db
 ## Changes
 - New constructor parameter: `options` (**QuickYAMLOptions**)
 - Set default values from each model if a model's variable doesn't exist in the database.
+- Handle methods parameters.
 
 ## Installation
 Use the command below to install the package ([js-yaml](https://www.npmjs.com/package/js-yaml) is also required to install):
@@ -31,6 +32,22 @@ type Model = [
 ];
 
 const db = new QuickYAML<Model>('./example.yaml');
+```
+
+If you want to set the variables with a specific value in the database when the manager is ready, use the following method:
+
+```ts
+new QuickYAML<Model>('./example.yaml', {
+    model: {
+        setValuesOnReady: true,
+        defaultModelValues: [
+            { variable: 'name', value: 'John' },
+            { variable: 'age', value: 24 },
+            { variable: 'alive', value: true },
+            { variable: 'languages', value: ['English', 'French'] }
+        ]
+    }
+});
 ```
 
 ### The method: `set`
